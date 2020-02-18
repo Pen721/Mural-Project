@@ -10,11 +10,12 @@
     
     <body>
       <a-scene>
-        <a-marker preset="h">
+            <a-entity id="monkey" gltf-model="#monkey" position="0 0 -5" scale="0.5 0.5 5">
+                </a-entity>
+        <a-marker preset="hiro">
           <a-entity id="monkey" gltf-model="#monkey" position="0 0 -5" scale="0.5 0.5 5">
           </a-entity>
         </a-marker>
-    
           <a-entity camera></a-entity>
       </a-scene>
     </body>
