@@ -1,0 +1,48 @@
+<!-- By Ada Rose Edwards @lady_ada_king. -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Rotating Sphere</title>
+    <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
+  <script src="https://raw.githack.com/jeromeetienne/AR.js/2.1.8/aframe/build/aframe-ar.js"></script>
+  </head>
+  <body>
+    <a-scene embedded arjs>
+      <a-assets>
+      </a-assets>
+      <a-marker preset= "hiro">
+        <a-box position="0 1 -5" rotation="0 45 45" scale="2 2 2" color = "#008080"
+            animation="property: object3D.position.y; to: 10; dir: alternate; dur: 2000; loop: true"></a-box> 
+
+          <a-box width="0.25" height="0.25" depth="0.25" position="-0.25 0.125 -0.75" rotation="0 90 0" color="#4CC3D9"></a-box>
+          <a-sphere position="0 0.3125 -1.25" radius="0.3125" color="#EF2D5E" animation="property: object3D.position.y; to: 10; dir: alternate; dur: 2000; loop: true"></a-sphere>
+          <a-cylinder position="0.25 0.1875 -0.75" radius="0.125" height="0.375" color="#FFC65D"></a-cylinder>
+        </a-marker>
+
+        <a-sphere id="outer-sphere" radius="0.6" material="color:white;opacity: 0.6">
+                <a-sphere id="inner-sphere" radius="0.1" material="color:red; opacity: 0.6"
+                          animation="property: radius; from: 0.1; to: 0.6: startEvents: fillSphere">
+                </a-sphere>
+            </a-sphere>
+
+       
+
+        
+
+      <!--<a-entity
+        geometry="primitive: plane; width: 10000; height: 10000;" rotation="-90 0 0"
+        material="src: #grid; repeat: 10000 10000; transparent: true;metalness:0.6; roughness: 0.4; sphericalEnvMap: #sky;"></a-entity>
+
+      <a-entity light="color: #ccccff; intensity: 1; type: ambient;" visible=""></a-entity>
+      <a-entity light="color: ffaaff; intensity: 1.5" position="5 5 5"></a-entity>
+      <a-entity light="color: white; intensity: 0.5" position="-5 5 15"></a-entity>
+      <a-entity light="color: white; type: ambient;"></a-entity>
+
+
+      <a-plane position="0 0 -1" rotation="-90 0 0" width="1" height="1" color="#7BC8A4" shadow></a-plane>
+      <a-light intensity="3" color="#00ffff" position="-5.72 6.65 0.80" animation__color="property:color; dir:alternate; dur:2000; easing:easeInOutSine; loop:true; to:#ff0000" alongpath="path:10,10,-10 -20,10,-10 10,0,-10; closed:true; dur:12000"></a-light>
+      <a-light intensity="5" color="#ff0000" position="8.60 6.65 0.80" animation__color="property:color; dir:alternate; dur:2000; easing:easeInOutSine; loop:true; to:#0000ff" alongpath="path:-2,-2,5 2,-1,5 0,-1,5; closed:true; dur:3000;"></a-light> -->
+
+    </a-scene>
+  </body>
+</html>
