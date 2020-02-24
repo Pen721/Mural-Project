@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vaporwave - A-Frame</title>
+    <meta name="description" content="Vaporwave aesthetic text By Ada Rose Edwards (@lady_ada_king).">
+    <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
+  <script src="https://raw.githack.com/jeromeetienne/AR.js/2.1.8/aframe/build/aframe-ar.js"></script>
+    <script src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
+  </head>
+  <body>
+    <a-scene embedded arjs>
+      <a-marker preset= "hiro">
+        
+          <a-cylinder position="0.0 0.0 0.0" radius="0.25" height="0.2" material="color: #FFC65D; transparent: true; opacity: 0.0"></a-cylinder>
+          <a-cylinder position="0.0 0.0 0.0" radius="0.5" height="0.2" material="color: #FFC65D; transparent: true; opacity: 1.0"></a-cylinder>
+          <a-box width="0.2" height="0.2" depth="0.2" position="0.0 0.0 0.58" rotation="0 90 0" color="#FFC65D"></a-box>
+          <a-box width="0.2" height="0.2" depth="0.2" position="0.0 0.0 -0.58" rotation="0 90 0" color="#FFC65D"></a-box>
+          <a-box width="0.2" height="0.2" depth="0.2" position="0.58 0.0 0.0" rotation="0 90 0" color="#FFC65D"></a-box>
+          <a-box width="0.2" height="0.2" depth="0.2" position="-0.58 0.0 0.0" rotation="0 90 0" color="#FFC65D"></a-box>
+          <a-box width="0.2" height="0.2" depth="0.2" position="0.424 0.0 -0.424" rotation="0 45 0" color="#FFC65D"></a-box>
+          <a-box width="0.2" height="0.2" depth="0.2" position="0.424 0.0 0.424" rotation="0 45 0" color="#FFC65D"></a-box>
+          <a-box width="0.2" height="0.2" depth="0.2" position="-0.424 0.0 0.424" rotation="0 45 0" color="#FFC65D"></a-box>
+          <a-box width="0.2" height="0.2" depth="0.2" position="-0.424 0.0 -0.424" rotation="0 45 0" color="#FFC65D"></a-box>
+
+        </a-marker>            
+
+    </a-scene>
+  </body>
+</html>
