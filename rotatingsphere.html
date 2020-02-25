@@ -1,165 +1,49 @@
+<!-- By Ada Rose Edwards @lady_ada_king. -->
 <!DOCTYPE html>
-<head>
-	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-	<title>Globe Example</title>
-	<script src='js/three.js'></script>
-	<script src="jsartoolkit5/artoolkit.min.js"></script>
-	<script src="jsartoolkit5/artoolkit.api.js"></script>
-	<script src="threex/threex-artoolkitsource.js"></script>
-	<script src="threex/threex-artoolkitcontext.js"></script>
-	<script src="threex/threex-arbasecontrols.js"></script>
-	<script src="threex/threex-armarkercontrols.js"></script>
-</head>
+<html>
+  <head>
+    <title>Rotating Sphere</title>
+    <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
+  <script src="https://raw.githack.com/jeromeetienne/AR.js/2.1.8/aframe/build/aframe-ar.js"></script>
 
-<body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
+  </head>
+  <body>
+    <a-scene embedded arjs>
+      <a-assets>
+      </a-assets>
+      <a-marker preset= "hiro">
+        <a-box position="0 1 -5" rotation="0 45 45" scale="2 2 2" color = "#008080"
+            animation="property: object3D.position.y; to: 10; dir: alternate; dur: 2000; loop: true"></a-box> 
 
-<!-- 
-	Credits: 
-	Lee Stemkoski: https://github.com/stemkoski's example AR.js files
-  	AR.js library and examples created by Jerome Etienne: https://github.com/jeromeetienne/AR.js/
--->
+          <a-box width="0.25" height="0.25" depth="0.25" position="-0.25 0.125 -0.75" rotation="0 90 0" color="#4CC3D9"></a-box>
+          <a-sphere position="0 0.3125 -1.25" radius="0.3125" color="#EF2D5E" animation="property: object3D.position.y; to: 10; dir: alternate; dur: 2000; loop: true"></a-sphere>
+          <a-cylinder position="0.25 0.1875 -0.75" radius="0.125" height="0.375" color="#FFC65D"></a-cylinder>
+        </a-marker>
 
-<script>
+        <a-sphere id="outer-sphere" radius="0.6" material="color:white;opacity: 0.6">
+                <a-sphere id="inner-sphere" radius="0.1" material="color:red; opacity: 0.6"
+                          animation="property: radius; from: 0.1; to: 0.6: startEvents: fillSphere">
+                </a-sphere>
+            </a-sphere>
 
-var scene, camera, renderer, clock, deltaTime, totalTime;
+       
 
-var arToolkitSource, arToolkitContext;
+        
 
-var markerRoot1;
+      <!--<a-entity
+        geometry="primitive: plane; width: 10000; height: 10000;" rotation="-90 0 0"
+        material="src: #grid; repeat: 10000 10000; transparent: true;metalness:0.6; roughness: 0.4; sphericalEnvMap: #sky;"></a-entity>
 
-var mesh1;
-
-initialize();
-animate();
-
-function initialize()
-{
-	scene = new THREE.Scene();
-
-	let ambientLight = new THREE.AmbientLight( 0xcccccc, 0.5 );
-	scene.add( ambientLight );
-
-	camera = new THREE.Camera();
-	scene.add(camera);
-
-	renderer = new THREE.WebGLRenderer({
-		antialias : true,
-		alpha: true
-	});
-	renderer.setClearColor(new THREE.Color('lightgrey'), 0)
-	renderer.setSize( 640, 480 );
-	renderer.domElement.style.position = 'absolute'
-	renderer.domElement.style.top = '0px'
-	renderer.domElement.style.left = '0px'
-	document.body.appendChild( renderer.domElement );
-
-	clock = new THREE.Clock();
-	deltaTime = 0;
-	totalTime = 0;
-	
-	////////////////////////////////////////////////////////////
-	// setup arToolkitSource
-	////////////////////////////////////////////////////////////
-
-	arToolkitSource = new THREEx.ArToolkitSource({
-		sourceType : 'webcam',
-	});
-
-	function onResize()
-	{
-		arToolkitSource.onResize()	
-		arToolkitSource.copySizeTo(renderer.domElement)	
-		if ( arToolkitContext.arController !== null )
-		{
-			arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)	
-		}	
-	}
-
-	arToolkitSource.init(function onReady(){
-		onResize()
-	});
-	
-	// handle resize event
-	window.addEventListener('resize', function(){
-		onResize()
-	});
-	
-	////////////////////////////////////////////////////////////
-	// setup arToolkitContext
-	////////////////////////////////////////////////////////////	
-
-	// create atToolkitContext
-	arToolkitContext = new THREEx.ArToolkitContext({
-		cameraParametersUrl: 'data/camera_para.dat',
-		detectionMode: 'mono'
-	});
-	
-	// copy projection matrix to camera when initialization complete
-	arToolkitContext.init( function onCompleted(){
-		camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
-	});
-
-	////////////////////////////////////////////////////////////
-	// setup markerRoots
-	////////////////////////////////////////////////////////////
-
-	// build markerControls
-	markerRoot1 = new THREE.Group();
-	scene.add(markerRoot1);
-	let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRoot1, {
-		type: 'pattern', patternUrl: "data/hiro.patt",
-	})
-
-	let geometry1 = new THREE.SphereGeometry(1, 32,32);
-	
-	let loader = new THREE.TextureLoader();
-	let texture = loader.load( 'images/earth-blue.jpg', render );
-	let material1 = new THREE.MeshLambertMaterial( { map: texture, opacity: 0.5 } );
-	
-	mesh1 = new THREE.Mesh( geometry1, material1 );
-	mesh1.position.y = 1;
-	
-	markerRoot1.add( mesh1 );
-	
-	let pointLight = new THREE.PointLight( 0xffffff, 1, 100 );
-	pointLight.position.set(0.5,3,2);
-	// create a mesh to help visualize the position of the light
-	pointLight.add( 
-		new THREE.Mesh( 
-			new THREE.SphereBufferGeometry( 0.05, 16,8 ), 
-			new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.5 }) 
-		) 
-	);
-	markerRoot1.add( pointLight );
-}
+      <a-entity light="color: #ccccff; intensity: 1; type: ambient;" visible=""></a-entity>
+      <a-entity light="color: ffaaff; intensity: 1.5" position="5 5 5"></a-entity>
+      <a-entity light="color: white; intensity: 0.5" position="-5 5 15"></a-entity>
+      <a-entity light="color: white; type: ambient;"></a-entity>
 
 
-function update()
-{
-	if ( markerRoot1.visible )
-		mesh1.rotation.y += 0.01;
-	// update artoolkit on every frame
-	if ( arToolkitSource.ready !== false )
-		arToolkitContext.update( arToolkitSource.domElement );
-}
+      <a-plane position="0 0 -1" rotation="-90 0 0" width="1" height="1" color="#7BC8A4" shadow></a-plane>
+      <a-light intensity="3" color="#00ffff" position="-5.72 6.65 0.80" animation__color="property:color; dir:alternate; dur:2000; easing:easeInOutSine; loop:true; to:#ff0000" alongpath="path:10,10,-10 -20,10,-10 10,0,-10; closed:true; dur:12000"></a-light>
+      <a-light intensity="5" color="#ff0000" position="8.60 6.65 0.80" animation__color="property:color; dir:alternate; dur:2000; easing:easeInOutSine; loop:true; to:#0000ff" alongpath="path:-2,-2,5 2,-1,5 0,-1,5; closed:true; dur:3000;"></a-light> -->
 
-
-function render()
-{
-	renderer.render( scene, camera );
-}
-
-
-function animate()
-{
-	requestAnimationFrame(animate);
-	deltaTime = clock.getDelta();
-	totalTime += deltaTime;
-	update();
-	render();
-}
-
-</script>
-
-</body>
+    </a-scene>
+  </body>
 </html>
