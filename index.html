@@ -136,9 +136,9 @@ function initialize()
 	
 	let loader = new THREE.TextureLoader();
 	
-	let geometry1 = new THREE.SphereGeometry(1, 25,25);	
+	let geometry1 = new THREE.SphereGeometry(1, 30,30);	
 	let texture = loader.load( 'images/earth-blue.jpg' );
-	let material1 = new THREE.MeshLambertMaterial( { map: texture, opacity: 0.75 } );
+	let material1 = new THREE.MeshLambertMaterial( { map: texture, opacity: 0.5 } );
 	globe = new THREE.Mesh( geometry1, material1 );
 	globe.position.y = 1;
 	sceneGroup.add(globe); 
