@@ -141,7 +141,7 @@ function initialize()
 	let material1 = new THREE.MeshLambertMaterial( { map: texture, opacity: 0.75 } );
 	globe = new THREE.Mesh( geometry1, material1 );
 	globe.position.y = 1;
-	sceneGroup.add(globe); 
+	sceneGroup.add(globe);  
 	
 	markerArray[0].children[0].add( sceneGroup );
 	currentMarkerName = markerNames[0];
@@ -199,7 +199,7 @@ function update()
 	// 	let currentGroup  = currentMarker.children[0];
 	// 	if ( baseMarker.visible && currentMarker.visible )
 	// 	{
-	// 		// console.log("updating marker " + i " -> base offset");
+			// console.log("updating marker " + i " -> base offset");
 			
 	// 		let relativePosition = currentMarker.worldToLocal( baseMarker.position.clone() );
 	// 		currentGroup.position.copy( relativePosition );
