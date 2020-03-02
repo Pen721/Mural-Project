@@ -41,7 +41,7 @@ function initialize()
 {
 	scene = new THREE.Scene();
 
-	let ambientLight = new THREE.AmbientLight( 0xcccccc, 0.5 );
+	let ambientLight = new THREE.AmbientLight( 0xffffff, 0.5 );
 	scene.add( ambientLight );
 
 	camera = new THREE.Camera();
@@ -51,8 +51,8 @@ function initialize()
 		antialias : true,
 		alpha: true
 	});
-	renderer.setClearColor(new THREE.Color('lightgrey'), 0)
-	renderer.setSize( 800, 600 );
+	renderer.setClearColor(new THREE.Color('white'), 0)
+	renderer.setSize( 800, 600 );//sets how clear it is
 	renderer.domElement.style.position = 'absolute'
 	renderer.domElement.style.top = '0px'
 	renderer.domElement.style.left = '0px'
@@ -98,7 +98,7 @@ function initialize()
 	arToolkitContext = new THREEx.ArToolkitContext({
 		cameraParametersUrl: 'data/camera_para.dat',
 		detectionMode: 'mono',
-		maxDetectionRate: 30,
+		maxDetectionRate: 100,
 	});
 	
 	// copy projection matrix to camera when initialization complete
@@ -136,9 +136,9 @@ function initialize()
 	
 	let loader = new THREE.TextureLoader();
 	
-	let geometry1 = new THREE.SphereGeometry(1, 32,32);	
+	let geometry1 = new THREE.SphereGeometry(1, 30,30);	
 	let texture = loader.load( 'images/earth-blue.jpg' );
-	let material1 = new THREE.MeshLambertMaterial( { map: texture, opacity: 0.75 } );
+	let material1 = new THREE.MeshLambertMaterial( { map: texture, opacity: 0.5 } );
 	globe = new THREE.Mesh( geometry1, material1 );
 	globe.position.y = 1;
 	sceneGroup.add(globe);  
@@ -146,7 +146,7 @@ function initialize()
 	markerArray[0].children[0].add( sceneGroup );
 	currentMarkerName = markerNames[0];
 	
-	let pointLight = new THREE.PointLight( 0xffffff, 1, 50 );
+	let pointLight = new THREE.PointLight( 0xffffff, 1, 20);
 	camera.add( pointLight );
 }
 
@@ -155,7 +155,8 @@ function update()
 {
 	keyboard.update();
 	
-	globe.rotation.y += 0.01;
+	globe.rotation.x += 0.01;
+	globe.rotation.y +=0.01;
 	
 	let anyMarkerVisible = false;
 	for (let i = 0; i < markerArray.length; i++)
