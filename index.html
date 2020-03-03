@@ -7,6 +7,11 @@
     <script src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
 	<!--<script src='js/three.js'></script>
 	<script src="jsartoolkit5/artoolkit.min.js"></script>
+  <script src='js/three.js'></script>
+  <script src='js/keyboard.js'></script>
+  <script src='js/typeface.json'></script>
+
+	<script src="jsartoolkit5/artoolkit.min.js"></script>-->
 	<script src="jsartoolkit5/artoolkit.api.js"></script>
 	<script src="threex/threex-artoolkitsource.js"></script>
 	<script src="threex/threex-artoolkitcontext.js"></script>
@@ -15,6 +20,275 @@
   </head>
 
 <body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
+
+<!-- 
+  Example created by Lee Stemkoski: https://github.com/stemkoski
+  Based on the AR.js library and examples created by Jerome Etienne: https://github.com/jeromeetienne/AR.js/
+-->
+
+<script>
+
+var scene, camera, renderer, clock, deltaTime, totalTime, keyboard;
+
+var arToolkitSource, arToolkitContext;
+
+var markerNames, markerArray, currentMarkerName;
+
+var sceneGroup;
+
+var globe;
+
+initialize();
+animate();
+
+function initialize()
+{
+	scene = new THREE.Scene();
+
+	let ambientLight = new THREE.AmbientLight( 0xffffff, 0.5 );
+	scene.add( ambientLight );
+
+	camera = new THREE.Camera();
+	scene.add(camera);
+
+	renderer = new THREE.WebGLRenderer({
+		antialias : true,
+		alpha: true
+	});
+	renderer.setClearColor(new THREE.Color('white'), 0)
+	renderer.setSize( 800, 600 );//sets how clear it is
+	renderer.domElement.style.position = 'absolute'
+	renderer.domElement.style.top = '0px'
+	renderer.domElement.style.left = '0px'
+	document.body.appendChild( renderer.domElement );
+
+	clock = new THREE.Clock();
+	deltaTime = 0;
+	totalTime = 0;
+	keyboard = new Keyboard();
+	
+	////////////////////////////////////////////////////////////
+	// setup arToolkitSource
+	////////////////////////////////////////////////////////////
+
+	arToolkitSource = new THREEx.ArToolkitSource({
+		sourceType : 'webcam',
+	});
+
+	function onResize()
+	{
+		arToolkitSource.onResizeElement()	
+		arToolkitSource.copyElementSizeTo(renderer.domElement)	
+		if ( arToolkitContext.arController !== null )
+		{
+			arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas)	
+		}	
+	}
+
+	arToolkitSource.init(function onReady(){
+		onResize()
+	});
+	
+	// handle resize event
+	window.addEventListener('resize', function(){
+		onResize()
+	});
+	
+	////////////////////////////////////////////////////////////
+	// setup arToolkitContext
+	////////////////////////////////////////////////////////////	
+
+	// create atToolkitContext
+	arToolkitContext = new THREEx.ArToolkitContext({
+		cameraParametersUrl: 'data/camera_para.dat',
+		detectionMode: 'mono',
+		maxDetectionRate: 100,
+	});
+	
+	// copy projection matrix to camera when initialization complete
+	arToolkitContext.init( function onCompleted(){
+		camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
+	});
+
+	////////////////////////////////////////////////////////////
+	// setup markerRoots
+	////////////////////////////////////////////////////////////
+
+	markerNames = ["hiro", "letterA", "letterB"];
+	
+	markerArray = [];
+	
+	for (let i = 0; i < markerNames.length; i++)
+	{
+		let marker = new THREE.Group();
+		scene.add(marker);
+		markerArray.push(marker);
+		
+		let markerControls = new THREEx.ArMarkerControls(arToolkitContext, marker, {
+			type: 'pattern', patternUrl: "data/" + markerNames[i] + ".patt",
+		});
+		
+		let markerGroup = new THREE.Group();
+		marker.add(markerGroup);
+	}
+	
+	////////////////////////////////////////////////////////////
+	// setup scene
+	////////////////////////////////////////////////////////////
+	
+	sceneGroup = new THREE.Group();
+	
+	let loader = new THREE.TextureLoader();
+	
+	let geometry1 = new THREE.SphereGeometry(1, 30,30);	
+	let texture = loader.load( 'images/earth-blue.jpg' );
+
+	let gear1 = new THREE.CylinderBufferGeometry( 0.5, 0.5, 0.25, 20 );
+	let cMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+	let cylinder1 = new THREE.Mesh( gear1, cMaterial );
+	cylinder1.position.x = 3;
+	sceneGroup.add(cylinder1);
+
+	var loader2 = new THREE.FontLoader();
+	loader2.load( 'fonts/gothic.ttf', function ( font ) {
+
+	var geometry2 = new THREE.TextBufferGeometry( 'Hello three.js!', {
+		font: font,
+		size: 80,
+		height: 5,
+		curveSegments: 12,
+		bevelEnabled: true,
+		bevelThickness: 10,
+		bevelSize: 8,
+		bevelOffset: 0,
+		bevelSegments: 5
+	} );
+
+	let text0 = new THREE.Mesh( geometry2, cMaterial );
+	text0.position.x = -3;
+	sceneGroup.add(text0);
+
+
+} );
+
+	// for (let i = 0; i < 4; i++)
+	// {
+	// 	let geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
+	// 	let material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+	// 	let cube = new THREE.Mesh( geometry, material );
+	// 	cube.position.x = 3+Math.sin(360/(4-i));
+	// 	cube.position.z = 3+Math.cos(360/(4-i));
+	// 	sceneGroup.add(cube);		
+
+	// 	// let markerControls = new THREEx.ArMarkerControls(arToolkitContext, marker, {
+	// 	// 	type: 'pattern', patternUrl: "data/" + markerNames[i] + ".patt",
+	// 	// });
+		
+	// }
+
+	var geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
+	var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+	var cube = new THREE.Mesh( geometry, material );
+	scene.add( cube );
+
+
+	let material1 = new THREE.MeshLambertMaterial( { map: texture, opacity: 0.5 } );
+	globe = new THREE.Mesh( geometry1, material1 );
+	globe.position.y = 1;
+	sceneGroup.add(globe);  
+	
+	markerArray[0].children[0].add( sceneGroup );
+	currentMarkerName = markerNames[0];
+	
+	let pointLight = new THREE.PointLight( 0xffffff, 1, 20);
+	camera.add( pointLight );
+}
+
+
+function update()
+{
+	keyboard.update();
+	
+	globe.rotation.x += 0.01;
+	globe.rotation.y +=0.01;
+	
+	let anyMarkerVisible = false;
+	for (let i = 0; i < markerArray.length; i++)
+	{
+		if ( markerArray[i].visible )
+		{
+			anyMarkerVisible = true;
+			markerArray[i].children[0].add( sceneGroup );
+			if ( currentMarkerName != markerNames[i] )
+			{
+				currentMarkerName = markerNames[i];
+				// console.log("Switching to " + currentMarkerName);
+			}
+			
+			let p = markerArray[i].children[0].getWorldPosition();
+			let q = markerArray[i].children[0].getWorldQuaternion();
+			let s = markerArray[i].children[0].getWorldScale();
+			let lerpAmount = 0.5;
+			
+			scene.add(sceneGroup);
+			sceneGroup.position.lerp(p, lerpAmount);
+			sceneGroup.quaternion.slerp(q, lerpAmount);
+			sceneGroup.scale.lerp(s, lerpAmount);
+
+			break;
+		}
+	}
+
+	if ( !anyMarkerVisible )
+	{
+		// console.log("No marker currently visible.");
+	}
+	
+	let baseMarker = markerArray[0];
+	
+	// // update relative positions of markers
+
+	// for (let i = 1; i < markerArray.length; i++)
+	// {
+	// 	let currentMarker = markerArray[i];
+	// 	let currentGroup  = currentMarker.children[0];
+	// 	if ( baseMarker.visible && currentMarker.visible )
+	// 	{
+			// console.log("updating marker " + i " -> base offset");
+			
+	// 		let relativePosition = currentMarker.worldToLocal( baseMarker.position.clone() );
+	// 		currentGroup.position.copy( relativePosition );
+			
+	// 		let relativeRotation = currentMarker.quaternion.clone().inverse().multiply( baseMarker.quaternion.clone() );
+	// 		currentGroup.quaternion.copy( relativeRotation );
+	// 	}
+	// }
+	
+	// update artoolkit on every frame
+	if ( arToolkitSource.ready !== false )
+		arToolkitContext.update( arToolkitSource.domElement );
+
+}
+
+
+function render()
+{
+	renderer.render( scene, camera );
+}
+
+
+function animate()
+{
+	requestAnimationFrame(animate);
+	deltaTime = clock.getDelta();
+	totalTime += deltaTime;
+	update();
+	render();
+}
+
+</script>
+
+</body>
     
     <script>
     
@@ -64,11 +338,11 @@
     
         function onResize()
         {
-            arToolkitSource.onResize()	
-            arToolkitSource.copySizeTo(renderer.domElement)	
+            arToolkitSource.onResizeElement()	
+            arToolkitSource.copyElementSizeTo(renderer.domElement)	
             if ( arToolkitContext.arController !== null )
             {
-                arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)	
+                arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas)	
             }	
         }
     
