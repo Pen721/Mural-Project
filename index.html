@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 <head>
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	<title>Exeter's Interactive CS Mural</title>
@@ -7,6 +8,19 @@
 	<script src='js/three.js'></script>
 	<!-- include jsartookit -->
 	<script src="jsartoolkit5/artoolkit.min.js"></script>
+=======
+  <head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Combined Gear and Globe</title>
+   <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/jeromeetienne/AR.js/2.1.8/aframe/build/aframe-ar.js"></script>
+    <script src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
+	<script src='js/three.js'></script>
+	<script src="jsartoolkit5/artoolkit.min.js"></script>
+  <script src='js/three.js'></script>
+  <!-- <script src='js/keyboard.js'></script> -->
+	<script src="jsartoolkit5/artoolkit.min.js"></script>
+>>>>>>> 52fcf256a81f1a58bccc8f3f9a079f258c26123b
 	<script src="jsartoolkit5/artoolkit.api.js"></script>
 	<!-- include threex.artoolkit -->
 	<script src="threex/threex-artoolkitsource.js"></script>
@@ -191,6 +205,7 @@ function update()
 	
 	let baseMarker = markerArray[0];
 	
+<<<<<<< HEAD
 	// // update relative positions of markers
 
 	// for (let i = 1; i < markerArray.length; i++)
@@ -199,15 +214,24 @@ function update()
 	// 	let currentGroup  = currentMarker.children[0];
 	// 	if ( baseMarker.visible && currentMarker.visible )
 	// 	{
+=======
+	// update relative positions of markers
+	for (let i = 1; i < markerArray.length; i++)
+	{
+		let currentMarker = markerArray[i];
+		let currentGroup  = currentMarker.children[0];
+		if ( baseMarker.visible && currentMarker.visible )
+		{
+>>>>>>> parent of 6859bea... Update index.html
 			// console.log("updating marker " + i " -> base offset");
 			
-	// 		let relativePosition = currentMarker.worldToLocal( baseMarker.position.clone() );
-	// 		currentGroup.position.copy( relativePosition );
+			let relativePosition = currentMarker.worldToLocal( baseMarker.position.clone() );
+			currentGroup.position.copy( relativePosition );
 			
-	// 		let relativeRotation = currentMarker.quaternion.clone().inverse().multiply( baseMarker.quaternion.clone() );
-	// 		currentGroup.quaternion.copy( relativeRotation );
-	// 	}
-	// }
+			let relativeRotation = currentMarker.quaternion.clone().inverse().multiply( baseMarker.quaternion.clone() );
+			currentGroup.quaternion.copy( relativeRotation );
+		}
+	}
 	
 	// update artoolkit on every frame
 	if ( arToolkitSource.ready !== false )
