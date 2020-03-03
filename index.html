@@ -142,10 +142,12 @@ function initialize()
 	let geometry1 = new THREE.SphereGeometry(0.2, 10,10, 180);	
 	let texture = loader.load( 'images/earth-blue.jpg' );
 
-	let gear1 = new THREE.CylinderBufferGeometry( 0.5, 0.5, 0.25, 20 );
+	let gear1 = new THREE.CylinderBufferGeometry( 0.5, 0.5, 0.25, 8);
 	let cMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00} );
 	let cylinder1 = new THREE.Mesh( gear1, cMaterial );
-	cylinder1.position.x = 3;
+	cylinder1.position.x = 0;
+  cylinder1.position.y = 1;
+  cylinder1.position.z = 0;
 	sceneGroup.add(cylinder1);
 
 	var loader2 = new THREE.FontLoader();
