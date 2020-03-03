@@ -15,7 +15,7 @@
 	<script src="threex/threex-artoolkitsource.js"></script>
 	<script src="threex/threex-artoolkitcontext.js"></script>
 	<script src="threex/threex-arbasecontrols.js"></script>
-	<script src="threex/threex-armarkercontrols.js"></script>-->
+	<script src="threex/threex-armarkercontrols.js"></script>
   </head>
 
 <body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
@@ -139,7 +139,7 @@ function initialize()
 	
 	let loader = new THREE.TextureLoader();
 	
-	let geometry1 = new THREE.SphereGeometry(1, 30,30);	
+	let geometry1 = new THREE.SphereGeometry(0.2, 10,10, 180);	
 	let texture = loader.load( 'images/earth-blue.jpg' );
 
 	let gear1 = new THREE.CylinderBufferGeometry( 0.5, 0.5, 0.25, 20 );
@@ -209,7 +209,6 @@ function update()
 	keyboard.update();
 	
 	globe.rotation.x += 0.01;
-	globe.rotation.y +=0.01;
 	
 	let anyMarkerVisible = false;
 	for (let i = 0; i < markerArray.length; i++)
@@ -380,7 +379,7 @@ function animate()
             type: 'pattern', patternUrl: "data/hiro.patt",
         })
     
-        let geometry1 = new THREE.SphereGeometry(1, 32,32);
+        let geometry1 = new THREE.SphereGeometry(0.2, 10,10);
         
         let loader = new THREE.TextureLoader();
         let texture = loader.load( 'images/earth-blue.jpg', render );
@@ -388,8 +387,6 @@ function animate()
         
         mesh1 = new THREE.Mesh( geometry1, material1 );
         mesh1.position.y = 1;
-        mesh1.position.x = 2;
-        mesh1.position.z = -2;
         
         markerRoot1.add( mesh1 );
         
