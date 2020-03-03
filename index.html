@@ -24,7 +24,7 @@
 
 <script>
 
-var scene, camera, renderer, clock, deltaTime, totalTime, keyboard;
+var scene, camera, renderer, clock, deltaTime, totalTime, keyboard, axesHelper;
 
 var arToolkitSource, arToolkitContext;
 
@@ -140,7 +140,9 @@ function initialize()
 	let texture = loader.load( 'images/earth-blue.jpg' );
 	let material1 = new THREE.MeshLambertMaterial( { map: texture, opacity: 0.75 } );
 	globe = new THREE.Mesh( geometry1, material1 );
-	globe.position.y = 1;
+	// globe.position.y = 1;
+	globe.position.x = 10;
+	// globe.position.z = -1.5;
 	sceneGroup.add(globe);  
 	
 	markerArray[0].children[0].add( sceneGroup );
