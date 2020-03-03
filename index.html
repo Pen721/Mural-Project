@@ -221,6 +221,7 @@ function update()
 	
 	let baseMarker = markerArray[0];
 	
+<<<<<<< HEAD
 	// // update relative positions of markers
 
 	// for (let i = 1; i < markerArray.length; i++)
@@ -229,15 +230,24 @@ function update()
 	// 	let currentGroup  = currentMarker.children[0];
 	// 	if ( baseMarker.visible && currentMarker.visible )
 	// 	{
+=======
+	// update relative positions of markers
+	for (let i = 1; i < markerArray.length; i++)
+	{
+		let currentMarker = markerArray[i];
+		let currentGroup  = currentMarker.children[0];
+		if ( baseMarker.visible && currentMarker.visible )
+		{
+>>>>>>> parent of 6859bea... Update index.html
 			// console.log("updating marker " + i " -> base offset");
 			
-	// 		let relativePosition = currentMarker.worldToLocal( baseMarker.position.clone() );
-	// 		currentGroup.position.copy( relativePosition );
+			let relativePosition = currentMarker.worldToLocal( baseMarker.position.clone() );
+			currentGroup.position.copy( relativePosition );
 			
-	// 		let relativeRotation = currentMarker.quaternion.clone().inverse().multiply( baseMarker.quaternion.clone() );
-	// 		currentGroup.quaternion.copy( relativeRotation );
-	// 	}
-	// }
+			let relativeRotation = currentMarker.quaternion.clone().inverse().multiply( baseMarker.quaternion.clone() );
+			currentGroup.quaternion.copy( relativeRotation );
+		}
+	}
 	
 	// update artoolkit on every frame
 	if ( arToolkitSource.ready !== false )
