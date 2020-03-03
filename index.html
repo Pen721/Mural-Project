@@ -150,28 +150,6 @@ function initialize()
   cylinder1.position.z = 0;
 	sceneGroup.add(cylinder1);
 
-	var loader2 = new THREE.FontLoader();
-	loader2.load( 'fonts/gothic.ttf', function ( font ) {
-
-	var geometry2 = new THREE.TextBufferGeometry( 'Hello three.js!', {
-		font: font,
-		size: 80,
-		height: 5,
-		curveSegments: 12,
-		bevelEnabled: true,
-		bevelThickness: 10,
-		bevelSize: 8,
-		bevelOffset: 0,
-		bevelSegments: 5
-	} );
-
-	let text0 = new THREE.Mesh( geometry2, cMaterial );
-	text0.position.x = -3;
-	sceneGroup.add(text0);
-
-
-} );
-
 	// for (let i = 0; i < 4; i++)
 	// {
 	// 	let geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
@@ -338,11 +316,11 @@ function animate()
     
         function onResize()
         {
-            arToolkitSource.onResizeElement()	
-            arToolkitSource.copyElementSizeTo(renderer.domElement)	
+            arToolkitSource.onResize()	
+            arToolkitSource.copySizeTo(renderer.domElement)	
             if ( arToolkitContext.arController !== null )
             {
-                arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas)	
+                arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)	
             }	
         }
     
