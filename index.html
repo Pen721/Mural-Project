@@ -5,7 +5,10 @@
     <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/jeromeetienne/AR.js/2.1.8/aframe/build/aframe-ar.js"></script>
     <script src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
-	<script src='js/three.js'></script>
+  <script src='js/three.js'></script>
+  <script src='js/keyboard.js'></script>
+  <script src='js/typeface.json'></script>
+
 	<!--<script src="jsartoolkit5/artoolkit.min.js"></script>-->
 	<script src="jsartoolkit5/artoolkit.api.js"></script>
 	<script src="threex/threex-artoolkitsource.js"></script>
@@ -145,7 +148,7 @@ function initialize()
 	sceneGroup.add(cylinder1);
 
 	var loader2 = new THREE.FontLoader();
-	loader2.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
+	loader2.load( 'fonts/gothic.ttf', function ( font ) {
 
 	var geometry2 = new THREE.TextBufferGeometry( 'Hello three.js!', {
 		font: font,
@@ -159,7 +162,7 @@ function initialize()
 		bevelSegments: 5
 	} );
 
-	let text0 = new THREE.Mesh( gear1, cMaterial );
+	let text0 = new THREE.Mesh( geometry2, cMaterial );
 	text0.position.x = -3;
 	sceneGroup.add(text0);
 
@@ -333,11 +336,11 @@ function animate()
     
         function onResize()
         {
-            arToolkitSource.onResize()	
-            arToolkitSource.copySizeTo(renderer.domElement)	
+            arToolkitSource.onResizeElement()	
+            arToolkitSource.copyElementSizeTo(renderer.domElement)	
             if ( arToolkitContext.arController !== null )
             {
-                arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)	
+                arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas)	
             }	
         }
     
