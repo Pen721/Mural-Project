@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-	<title>Hello, world!</title>
+	<title>Exeter's Interactive CS Mural</title>
 	<script src='js/keyboard.js'></script>
 	<!-- include three.js library -->
 	<script src='js/three.js'></script>
@@ -24,7 +24,7 @@
 
 <script>
 
-var scene, camera, renderer, clock, deltaTime, totalTime, keyboard;
+var scene, camera, renderer, clock, deltaTime, totalTime, keyboard, axesHelper;
 
 var arToolkitSource, arToolkitContext;
 
@@ -73,11 +73,11 @@ function initialize()
 
 	function onResize()
 	{
-		arToolkitSource.onResize()	
-		arToolkitSource.copySizeTo(renderer.domElement)	
+		arToolkitSource.onResizeElement()	
+		arToolkitSource.copyElementSizeTo(renderer.domElement)	
 		if ( arToolkitContext.arController !== null )
 		{
-			arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)	
+			arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas)	
 		}	
 	}
 
@@ -98,7 +98,7 @@ function initialize()
 	arToolkitContext = new THREEx.ArToolkitContext({
 		cameraParametersUrl: 'data/camera_para.dat',
 		detectionMode: 'mono',
-		maxDetectionRate: 60, //changed from 30
+		maxDetectionRate: 30,
 	});
 	
 	// copy projection matrix to camera when initialization complete
@@ -110,7 +110,9 @@ function initialize()
 	// setup markerRoots
 	////////////////////////////////////////////////////////////
 
-	markerNames = ["letterA", "letterB", "letterC", "letterD"]; //0 is top left and it goes counterclockwise
+	// markerNames = ["hiro", "letterA", "letterB", "letterC", "kanji"];
+	markerNames = ["kanji"];
+
 	
 	markerArray = [];
 	
@@ -127,30 +129,6 @@ function initialize()
 		let markerGroup = new THREE.Group();
 		marker.add(markerGroup);
 	}
-/*
-	markerRootA = new THREE.Group();
-	scene.add(markerRootA);
-	let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRootA, {
-		type: 'pattern', patternUrl: "data/letterA.patt",
-	});
-
-	markerRootB = new THREE.Group();
-	scene.add(markerRootB);
-	let markerControls2 = new THREEx.ArMarkerControls(arToolkitContext, markerRootB, {
-		type: 'pattern', patternUrl: "data/letterB.patt",
-	});
-
-	markerRootC = new THREE.Group();
-	scene.add(markerRootC);
-	let markerControls3 = new THREEx.ArMarkerControls(arToolkitContext, markerTootB, {
-		type = 'pattern', patternUrl: "data/letterC.patt",
-	});
-
-	markerRootD = new THREE.Group();
-	scene.add(markerRootC);
-	let markerControls3 = new THREEx.ArMarkerControls(arToolkitContext, markerTootB, {
-		type = 'pattern', patternUrl: "data/letterD.patt",
-	});*/
 	
 	////////////////////////////////////////////////////////////
 	// setup scene
@@ -164,8 +142,33 @@ function initialize()
 	let texture = loader.load( 'images/earth-blue.jpg' );
 	let material1 = new THREE.MeshLambertMaterial( { map: texture, opacity: 0.75 } );
 	globe = new THREE.Mesh( geometry1, material1 );
-	sceneGroup.add(globe); 
+	// globe.position.y = 1;
+	// globe.position.x = 6.7;
+	// globe.position.z = -1.5;
+	globe.position.x=1;
+	globe.position.y=1;
+
+
+	sceneGroup.add(globe);  
 	
+
+	var loader = new THREE.FontLoader();
+
+	loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
+
+		var geometry = new THREE.TextGeometry( 'Hello three.js!', {
+			font: font,
+			size: 80,
+			height: 5,
+			curveSegments: 12,
+			bevelEnabled: true,
+			bevelThickness: 10,
+			bevelSize: 8,
+			bevelOffset: 0,
+			bevelSegments: 5
+		} );
+	} );
+
 	markerArray[0].children[0].add( sceneGroup );
 	currentMarkerName = markerNames[0];
 	
@@ -179,30 +182,11 @@ function update()
 	keyboard.update();
 	
 	globe.rotation.y += 0.01;
-
-	for(let i = 0; i < markerArray.length; i++){
-		if(markerArray[0].visible){
-			if(markerArray[2].visible){
-			let p = (markerArray[i].children[0].getWorldPosition() + markerArray[i].children[2].getWorldPosition())/2;
-			let q = markerArray[i].children[0].getWorldQuaternion();
-			let s = markerArray[i].children[0].getWorldScale();
-			let lerpAmount = 0.5;
-			scene.add(sceneGroup);
-			sceneGroup.position.lerp(p, lerpAmount);
-			sceneGroup.quaternion.slerp(q, lerpAmount);
-			sceneGroup.scale.lerp(s, lerpAmount);
-
-			break;
-			}
-		}
-	}
-	globe.setposition(p);
-
 	
-	/*let anyMarkerVisible = false;
+	let anyMarkerVisible = false;
 	for (let i = 0; i < markerArray.length; i++)
 	{
-		if ( markerArray[i].visible)
+		if ( markerArray[i].visible )
 		{
 			anyMarkerVisible = true;
 			markerArray[i].children[0].add( sceneGroup );
@@ -224,7 +208,7 @@ function update()
 
 			break;
 		}
-	}*/
+	}
 
 	if ( !anyMarkerVisible )
 	{
@@ -234,13 +218,14 @@ function update()
 	let baseMarker = markerArray[0];
 	
 	// update relative positions of markers
+
 	for (let i = 1; i < markerArray.length; i++)
 	{
 		let currentMarker = markerArray[i];
 		let currentGroup  = currentMarker.children[0];
 		if ( baseMarker.visible && currentMarker.visible )
 		{
-			// console.log("updating marker " + i " -> base offset");
+			console.log("updating marker " + i " -> base offset");
 			
 			let relativePosition = currentMarker.worldToLocal( baseMarker.position.clone() );
 			currentGroup.position.copy( relativePosition );
